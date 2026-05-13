@@ -17,47 +17,36 @@
 
     public string Dequeue()
     {
-        if (_queue.Count == 0) // Verify the queue is not empty
+        if (_queue.Count == 0)
         {
             throw new InvalidOperationException("The queue is empty.");
         }
 
-        // Find the index of the item with the highest priority to remove
-        var highPriorityIndex = 0;
-        for (int index = 1; index < _queue.Count - 1; index++)
+        // Start assuming first item is highest
+        int highPriorityIndex = 0;
+
+        // Search entire queue
+        for (int index = 1; index < _queue.Count; index++)
         {
-            if (_queue[index].Priority >= _queue[highPriorityIndex].Priority)
+            // Strictly greater preserves FIFO order
+            if (_queue[index].Priority > _queue[highPriorityIndex].Priority)
+            {
                 highPriorityIndex = index;
+            }
         }
 
-        // Remove and return the item with the highest priority
-        var value = _queue[highPriorityIndex].Value;
+        // Save value
+        string value = _queue[highPriorityIndex].Value;
+
+        // Remove item from queue
+        _queue.RemoveAt(highPriorityIndex);
+
         return value;
     }
 
     // DO NOT MODIFY THE CODE IN THIS METHOD
-    // The graders rely on this method to check if you fixed all the bugs, so changes to it will cause you to lose points.
     public override string ToString()
     {
         return $"[{string.Join(", ", _queue)}]";
-    }
-}
-
-internal class PriorityItem
-{
-    internal string Value { get; set; }
-    internal int Priority { get; set; }
-
-    internal PriorityItem(string value, int priority)
-    {
-        Value = value;
-        Priority = priority;
-    }
-
-    // DO NOT MODIFY THE CODE IN THIS METHOD
-    // The graders rely on this method to check if you fixed all the bugs, so changes to it will cause you to lose points.
-    public override string ToString()
-    {
-        return $"{Value} (Pri:{Priority})";
     }
 }
